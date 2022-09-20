@@ -10,5 +10,7 @@ variable "sc-ami-id" {
 
 variable "sc-tags" {}
 
+# Network details
+variable "sc-vpc_id" {}
 variable "sc-ingress-subnet_id" {}
 variable "sc-admin-subnet_id" {}

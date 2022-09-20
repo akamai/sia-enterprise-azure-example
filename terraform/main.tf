@@ -35,4 +35,5 @@ module "test" {
   sc-ingress-subnet_id = "subnet-0511677247db6fda7"
   sc-admin-subnet_id = "subnet-0aae78f20996f0ff0"
   sc-tags = {}
+  sc-vpc_id = "vpc-06f71c72d76104523"
 }
