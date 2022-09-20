@@ -11,7 +11,7 @@ resource "aws_network_interface" "ingress" {
 
 ## Define the "admin / egress" interface
 resource "aws_network_interface" "admin" {
-  subnet_id   = var.sc-ingress-subnet_id
+  subnet_id   = var.sc-admin-subnet_id
   tags = merge(
     {
     Name = "SC-Admin Interface"
