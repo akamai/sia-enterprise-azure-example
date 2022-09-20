@@ -1,4 +1,5 @@
 # Instance definition
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
 resource "aws_instance" "sc-connector" {
   ami           = var.sc-ami-id
   instance_type = var.sc-instance-type
