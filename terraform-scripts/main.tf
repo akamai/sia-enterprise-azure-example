@@ -32,8 +32,9 @@ provider "aws" {
 
 module "test" {
   source = "./modules/security-connector/"
-  sc-ingress-subnet_id = "subnet-0511677247db6fda7"
-  sc-admin-subnet_id = "subnet-0aae78f20996f0ff0"
-  sc-tags = {}
-  sc-vpc_id = "vpc-06f71c72d76104523"
+  sc-ingress-subnet_id = var.connector_internal_subnet
+  sc-admin-subnet_id = var.connector_public_subnet
+  sc-tags = var.additional_tags
+  sc-vpc_id = var.connector_vpc_id
+  sc-ami-id = var.connector_ami_image_id
 }
