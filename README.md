@@ -12,26 +12,28 @@ This repo is meant to support ETP ENG team in order to automate cloud installati
 - AWS API User
 
 
-# Usage
-- configure the data in the "main.tf" --> [2DO: Shift to vars]
-- configure your AWS credentials into file ./.aws_creds (Root of the repo, not the TF dir!)
-- Run the following commands from within the Terraform dir
+## Usage
+- configure your AWS credentials into file ./.aws_creds (Root of the repo, not the TF dir!) see the [sample file](./.aws_creds-example)
+- copy the [example _overwrite](variable-files/example_overwrite.tf) file and configure it to your setup
+- Run the following commands from within the `terraform-scripts` direcvtory (make sure to use your individual var file)
   ```bash
   # Initialize Terraform
   terraform init
   
   # Check what would happen
-  terraform plan
+  terraform plan -var-file=../variable-files/mike-akseel_overwrite.tf
   
   # Do the rollout
-  terraform apply
+  terraform apply -var-file=../variable-files/mike-akseel_overwrite.tf
   ```
-  Make sure to follow the on-screen instructions
+  Make sure to follow the on-screen instructions.  
+
+
 
 - To delete everything:
   ```bash
   # Delete everything that was created by TF
-  terraform destroy
+  terraform destroy -var-file=../variable-files/mike-akseel_overwrite.tf
   ```
 
 ## Issues / Not implemented

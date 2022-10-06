@@ -1,16 +1,30 @@
 # Variables
 
+## Instance details
 variable "sc-instance-type" {
+  description = "The Security connector instance type (default: t2.medium)"
   default = "t2.medium"
 }
 
 variable "sc-ami-id" {
-  default = "ami-09bfb182e705989e1"
+  description = "The Security Connector AMI ID (default: None)"
+  default = ""
 }
 
-variable "sc-tags" {}
+variable "sc-tags" {
+  description = "Additional Security Connector Tags (default: None)"
+}
 
-# Network details
-variable "sc-vpc_id" {}
-variable "sc-ingress-subnet_id" {}
-variable "sc-admin-subnet_id" {}
+## Network details
+variable "sc-vpc_id" {
+  description = "The VPC to place the SC in (default: None)"
+}
+
+variable "sc-ingress-subnet_id" {
+  description = "The subnet to put the Ingress interface into (default: None)"
+}
+
+variable "sc-admin-subnet_id" {
+  description = "The subnet to put the admin/egress interface into (default: None)"
+}
+
