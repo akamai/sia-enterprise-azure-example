@@ -21,6 +21,7 @@ provider "aws" {
   shared_credentials_files = ["../.aws_creds"]
 }
 
+# Security connectors
 module "security_connector01" {
   source = "./modules/security-connector/"
     sc-name = "SC01"
@@ -41,6 +42,7 @@ module "security_connector02" {
   sc-ami-id = var.connector_ami_image_id
 }
 
+# Linux Test Client
 module "linux_test_client01" {
   source = "./modules/linux-test-client/"
   ltc-name = "LTC01"
@@ -50,6 +52,18 @@ module "linux_test_client01" {
   ltc-ami_id = var.ltc-ami_id
   tlc-vpc_id = var.tlc-vpc_id
 }
+
+# Loadbalancer
+module "nlb001" {
+  source = "./modules/network_load_balancer/"
+  nlb-vpc_id = var.connector_vpc_id
+  nlb-name = "sc-nlb01"
+  nlb-instance_ids = [module.security_connector01.security_connector.instance.id, module.security_connector02.security_connector.instance.id]
+  nlb-tags = var.additional_tags
+  nlb-subnet_ids = [ var.connector_internal_subnet ]
+}
+
+
 
 
 # OUTPUT FROM HERE
@@ -73,5 +87,11 @@ output "ltc01" {
   value = {
     instance_id = module.linux_test_client01.linux_text_client.instance.id,
     public_ip = module.linux_test_client01.linux_text_client.instance.public_ip
+  }
+}
+
+output "nlb01" {
+  value = {
+    nlb_dns = module.nlb001.nlb.nlb.dns_name
   }
 }
