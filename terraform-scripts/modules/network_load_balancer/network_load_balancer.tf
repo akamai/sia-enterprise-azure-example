@@ -21,3 +21,13 @@ resource "aws_lb_listener" "explicit" {
     target_group_arn = aws_lb_target_group.explicit_proxy.arn
   }
 }
+
+resource "aws_lb_listener" "implicit" {
+  load_balancer_arn = aws_lb.sc-nlb.arn
+  port              = "443"
+  protocol          = "TCP"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.implicit_proxy.arn
+  }
+}
