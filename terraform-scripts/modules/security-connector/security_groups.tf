@@ -2,7 +2,7 @@
 
 ## Ingress Interface Security Group
 resource "aws_security_group" "sc-ingress_if_sg" {
-  name        = "sc-ingress_if_sg"
+  name        = "${var.sc-name}-sc-ingress_if_sg"
   description = "Allow connections ingress interface"
   vpc_id      = var.sc-vpc_id
 
@@ -46,14 +46,16 @@ resource "aws_security_group" "sc-ingress_if_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "sc-ingress-if_sg"
-  }
+  tags = merge(
+    {
+    Name = "${var.sc-name}-sc-ingress_if_sg"
+    }, var.sc-tags)
+
 }
 
 ## Admin Interface Security Group
 resource "aws_security_group" "sc-admin_if_sg" {
-  name        = "sc-admin_if_sg"
+  name        = "${var.sc-name}-sc-admin_if_sg"
   description = "Allow connections admin interface"
   vpc_id      = var.sc-vpc_id
 
@@ -74,7 +76,8 @@ resource "aws_security_group" "sc-admin_if_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "sc-admin_if_sg"
-  }
+  tags = merge(
+    {
+    Name = "${var.sc-name}-sc-admin_if_sg"
+    }, var.sc-tags)
 }

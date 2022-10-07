@@ -4,7 +4,7 @@ resource "aws_network_interface" "ingress" {
   subnet_id   = var.sc-ingress-subnet_id
   tags = merge(
     {
-    Name = "SC-Ingress Interface"
+    Name = "${var.sc-name}-Ingress-IF"
     }, var.sc-tags)
   security_groups = [aws_security_group.sc-ingress_if_sg.id]
 }
@@ -14,7 +14,7 @@ resource "aws_network_interface" "admin" {
   subnet_id   = var.sc-admin-subnet_id
   tags = merge(
     {
-    Name = "SC-Admin Interface"
+    Name = "${var.sc-name}-Admin-IF"
     }, var.sc-tags)
   security_groups = [aws_security_group.sc-admin_if_sg.id]
 }
@@ -22,6 +22,10 @@ resource "aws_network_interface" "admin" {
 ## Create an ELASTIC IP
 resource "aws_eip" "admin_ip" {
   vpc      = true
+  tags = merge(
+  {
+  Name = "${var.sc-name}-EIP"
+  }, var.sc-tags)
 }
 
 ## Assign the ELASTIC IP to the admin interface

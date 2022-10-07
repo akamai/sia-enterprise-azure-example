@@ -1,4 +1,10 @@
 # Variables
+## Additional variables
+variable "ltc-name" {
+  description = "Name for the Linux Test client"
+  default = ""
+}
+
 ## Instance details
 variable "ltc-instance-type" {
   description = "The Linux Test Client instance type (default: t3.micro)"

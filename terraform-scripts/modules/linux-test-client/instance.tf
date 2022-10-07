@@ -5,4 +5,8 @@ resource "aws_instance" "linux-test-client" {
   subnet_id = var.ltc-subnet_id
   #security_groups = [aws_security_group.ltc-admin.id]
   associate_public_ip_address = true
+  tags = merge(
+    {
+    Name = "${var.ltc-name}-ec2"
+    }, var.ltc-tags)
 }

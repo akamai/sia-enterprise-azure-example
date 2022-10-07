@@ -3,6 +3,10 @@
 resource "aws_instance" "sc-connector" {
   ami           = var.sc-ami-id
   instance_type = var.sc-instance-type
+  tags = merge(
+    {
+    Name = "${var.sc-name}-ec2"
+    }, var.sc-tags)
 
   network_interface {
     network_interface_id = aws_network_interface.ingress.id

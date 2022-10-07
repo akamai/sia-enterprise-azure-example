@@ -1,4 +1,9 @@
 # Variables
+## Additional variables
+variable "sc-name" {
+  description = "Name for the security connector"
+  default = ""
+}
 
 ## Instance details
 variable "sc-instance-type" {
