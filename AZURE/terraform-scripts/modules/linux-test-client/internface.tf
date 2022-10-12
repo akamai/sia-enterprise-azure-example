@@ -1,5 +1,5 @@
 resource "azurerm_network_interface" "ltc-if0" {
-  name                = "example-nic"
+  name                = "${var.ltc-name}-if0"
   location            = var.region
   resource_group_name = var.resource_group
 
@@ -12,7 +12,7 @@ resource "azurerm_network_interface" "ltc-if0" {
 }
 
 resource "azurerm_public_ip" "ltc-pubip" {
-  name                = "ltc-publicIP"
+  name                = "${var.ltc-name}-publicIP"
   location            = var.region
   resource_group_name = var.resource_group
   allocation_method   = "Static"

@@ -27,10 +27,11 @@ module "network" {
 
 module "ltc01" {
   source = "./modules/linux-test-client/"
+  ltc-name = "LTC-001"
   resource_group = var.resource_group
   region = var.region
   ltc-subnet_id = module.network.internal-clients.id
-  ltc-key_name = var.ltc-key_name
+  ltc-key = var.ltc-key
 }
 
 output "networks" {

@@ -11,8 +11,8 @@ variable "resource_group" {
 }
 
 
-variable "ltc-key_name" {
-  description = "Name of the 'rsa public_key' to associate with the instance (default: None)"
+variable "ltc-key" {
+  description = "The real 'rsa public_key' to associate with the instance (default: None)"
   default = ""
   type = string
 }
