@@ -41,7 +41,8 @@ module "sc001" {
   resource_group = var.resource_group
   sc-key = var.ltc-key
   #sc-image-id = "sky-13965-20220921.44428485-debug-vhd"
-  sc-image-id = "/subscriptions/c3ab526d-d994-43c8-b0ab-c3eb185152d0/resourceGroups/sky-rg/providers/Microsoft.Compute/galleries/SkyImageGallery/images/sky-13965-20220921.44428485-debug-vhd/versions/0.0.1"
+  #sc-image-id = "/subscriptions/c3ab526d-d994-43c8-b0ab-c3eb185152d0/resourceGroups/sky-rg/providers/Microsoft.Compute/galleries/SkyImageGallery/images/sky-13965-20220921.44428485-debug-vhd/versions/0.0.1"
+  sc-image-id = "/subscriptions/c3ab526d-d994-43c8-b0ab-c3eb185152d0/resourceGroups/sky-rg/providers/Microsoft.Compute/galleries/SkyImageGallery/images/sky-13965-20220919.44398044-debug-vhd/versions/0.0.1"
   sc-ingress-subnet_id = module.network.ingress-net.id
   sc-admin-subnet_id = module.network.admin-net.id
 }

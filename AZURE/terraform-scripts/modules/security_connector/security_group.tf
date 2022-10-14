@@ -47,9 +47,20 @@ resource "azurerm_network_security_group" "sc-sg-ingress" {
     source_address_prefix      = "10.0.0.0/8"
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "ssh"
+    priority                   = 104
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
-resource "azurerm_subnet_network_security_group_association" "sg-association-admin" {
+resource "azurerm_subnet_network_security_group_association" "sg-association-ingress" {
   subnet_id                 = var.sc-ingress-subnet_id
   network_security_group_id = azurerm_network_security_group.sc-sg-ingress.id
 }
@@ -69,7 +80,7 @@ resource "azurerm_network_security_group" "sc-sg-admin" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "10.0.0.0/8"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }

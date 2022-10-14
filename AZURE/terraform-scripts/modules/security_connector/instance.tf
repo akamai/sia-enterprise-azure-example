@@ -1,8 +1,8 @@
-resource "azurerm_linux_virtual_machine" "security-connector" {
+resource azurerm_linux_virtual_machine "security-connector" {
   name                = "${var.sc-name}-instance"
   resource_group_name = var.resource_group
   location            = var.region
-  size                = "Standard_F2"
+  size                = "Standard_B2s"
   admin_username      = "sc-admin"
   network_interface_ids = [
     azurerm_network_interface.sc-if0.id,
@@ -16,8 +16,11 @@ resource "azurerm_linux_virtual_machine" "security-connector" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
   source_image_id = var.sc-image-id
+  boot_diagnostics {
+    storage_account_uri = ""
+  }
 }
