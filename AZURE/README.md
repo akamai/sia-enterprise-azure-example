@@ -1,4 +1,6 @@
 # This scripty will install SIA SC connector into AZURE
+Azure docs: https://collaborate.akamai.com/confluence/pages/viewpage.action?spaceKey=ESE&title=SC+Setup
+
 
 # Requirements
 ## Tools
