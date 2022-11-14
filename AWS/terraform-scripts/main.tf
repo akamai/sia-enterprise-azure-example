@@ -27,6 +27,7 @@ module "security_connector01" {
     sc-name = "SC01"
   sc-ingress-subnet_id = var.connector_internal_subnet
   sc-admin-subnet_id = var.connector_public_subnet
+  sc-key_name = var.ltc-key_name
   sc-tags = var.additional_tags
   sc-vpc_id = var.connector_vpc_id
   sc-ami-id = var.connector_ami_image_id
@@ -37,6 +38,7 @@ module "security_connector02" {
   sc-name = "SC02"
   sc-ingress-subnet_id = var.connector_internal_subnet
   sc-admin-subnet_id = var.connector_public_subnet
+  sc-key_name = var.ltc-key_name
   sc-tags = var.additional_tags
   sc-vpc_id = var.connector_vpc_id
   sc-ami-id = var.connector_ami_image_id

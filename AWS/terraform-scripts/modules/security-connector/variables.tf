@@ -11,6 +11,10 @@ variable "sc-instance-type" {
   default = "t2.medium"
 }
 
+variable "sc-key_name" {
+  description = "Name of the 'rsa public_key' to associate with the instance (default: None)"
+}
+
 variable "sc-ami-id" {
   description = "The Security Connector AMI ID (default: None)"
   default = ""

@@ -3,6 +3,7 @@
 resource "aws_instance" "sc-connector" {
   ami           = var.sc-ami-id
   instance_type = var.sc-instance-type
+  key_name = var.sc-key_name
   tags = merge(
     {
     Name = "${var.sc-name}-ec2"
