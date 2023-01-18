@@ -9,7 +9,7 @@ resource "azurerm_subnet" "subnet-clients" {
 
 # Azure Firewall
 resource "azurerm_subnet" "subnet-azfirewall" {
-  name                 = "subnet-azfirewall"
+  name                 = "AzureFirewallSubnet" # was "subnet-azfirewall" but Azure requires it to be AzureFirewallSubnet
   resource_group_name  = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet-central.name
   address_prefixes     = ["10.1.1.0/24"]
