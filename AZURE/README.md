@@ -15,9 +15,10 @@ Azure docs: https://collaborate.akamai.com/confluence/pages/viewpage.action?spac
 ```bash
 az login
 ```
-authenticate to the appropriate acocunt
+authenticate to the appropriate account
 
 Check accounts & Select subscription
+
 ```bash
 az account list -o table
 ```
