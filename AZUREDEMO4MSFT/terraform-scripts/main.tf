@@ -39,13 +39,15 @@ module "network" {
 } */
 
 ##### OUTPUTS
+/* 
+
 output "networks" {
   value = {
     "internal-clients": module.network.internal-clients
   }
 }
 
-/* output "sc001" {
+output "sc001" {
   value = {
     "pub_admin_ip": module.sc001.sc.public_ip_address
   }
