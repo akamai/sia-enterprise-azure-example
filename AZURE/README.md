@@ -1,13 +1,17 @@
 # This scripty will install SIA SC connector into AZURE
+
 Azure docs: https://collaborate.akamai.com/confluence/pages/viewpage.action?spaceKey=ESE&title=SC+Setup
 
 
 # Requirements
+
 ## Tools
-- helm 
-- az (azure cli)
+
+- `terraform`, https://developer.hashicorp.com/terraform/downloads
+- `az`, Azure CLI - https://learn.microsoft.com/en-us/cli/azure/
 
 ## Prep
+
 ```bash
 az login
 ```
@@ -22,9 +26,10 @@ Switch to subscription ID
 ```bash
 az account set --subscription <ID>
 ```
+
 Initialize the TF repo
 
 ```bash
-cd terraform-scripts
+cd AZURE/terraform-scripts
 terraform init
 ```
