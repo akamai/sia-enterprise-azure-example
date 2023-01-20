@@ -8,14 +8,13 @@ January 2023
 - [Prerequisites](#prerequisites)
 - [Target architecture](#target-architecture)
 - [Deploying the demo](#deploying-the-demo)
-- [Appendixes](#appendixes)
-  - [Windows 11 Pro gotcha](#windows-11-pro-gotcha)
-    - [Template](#template)
-    - [Variable](#variable)
+  - [Terraform for the heavy lifting](#terraform-for-the-heavy-lifting)
+  - [Configure your SIA Enterprise Security Connector](#configure-your-sia-enterprise-security-connector)
+- [Demo from within the environment](#demo-from-within-the-environment)
 
 ## Prerequisites
 
-- Microsoft [Azure Account](https://azure.microsoft.com)
+- Microsoft [Azure Account](https://azure.microsoft.com) with an empty Resource Group
 - Akamai SIA Enterprise account ([free trial]([#](https://www.akamai.com/products/secure-internet-access-enterprise)))
 - A computer with Azure CLI `az` and Terraform
 - A Remote Desktop Client
@@ -26,8 +25,12 @@ TODO: Insert diagram here
 
 ## Deploying the demo
 
+### Terraform for the heavy lifting
+
+It takes between 5 and 10 minutes to fully populate a Resource Group
+
 ```bash
-# Customize to you own Terraform variables
+# Customize to your own Terraform variables
 # Use terraform-scripts/variables.tf as a template
 MYTFVAR="../variable-files/androcho-jan23-demo.tf"
 
@@ -36,302 +39,26 @@ terraform init
 terraform plan -var-file=$MYTFVAR
 terraform apply -var-file=$MYTFVAR
 
+# Display the public IP address you need to connect to
+# to access the Windows Client machine over RDP
+terraform output
+
 # And once the demo is over
 terraform destroy -var-file=$MYTFVAR
 ```
 
-## Appendixes
+### Configure your SIA Enterprise Security Connector
 
-### Windows 11 Pro gotcha
+TODO: write instructions, outline being:
 
-#### Template
+- Declare/Activate the Security Connector
+- Create a Location, Policy
 
-```json
-{
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": {
-            "type": "string"
-        },
-        "networkInterfaceName": {
-            "type": "string"
-        },
-        "enableAcceleratedNetworking": {
-            "type": "bool"
-        },
-        "networkSecurityGroupName": {
-            "type": "string"
-        },
-        "networkSecurityGroupRules": {
-            "type": "array"
-        },
-        "subnetName": {
-            "type": "string"
-        },
-        "virtualNetworkId": {
-            "type": "string"
-        },
-        "publicIpAddressName": {
-            "type": "string"
-        },
-        "publicIpAddressType": {
-            "type": "string"
-        },
-        "publicIpAddressSku": {
-            "type": "string"
-        },
-        "pipDeleteOption": {
-            "type": "string"
-        },
-        "virtualMachineName": {
-            "type": "string"
-        },
-        "virtualMachineComputerName": {
-            "type": "string"
-        },
-        "virtualMachineRG": {
-            "type": "string"
-        },
-        "osDiskType": {
-            "type": "string"
-        },
-        "osDiskDeleteOption": {
-            "type": "string"
-        },
-        "virtualMachineSize": {
-            "type": "string"
-        },
-        "nicDeleteOption": {
-            "type": "string"
-        },
-        "adminUsername": {
-            "type": "string"
-        },
-        "adminPassword": {
-            "type": "secureString"
-        },
-        "patchMode": {
-            "type": "string"
-        },
-        "enableHotpatching": {
-            "type": "bool"
-        }
-    },
-    "variables": {
-        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
-        "vnetId": "[parameters('virtualNetworkId')]",
-        "vnetName": "[last(split(variables('vnetId'), '/'))]",
-        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
-    },
-    "resources": [
-        {
-            "name": "[parameters('networkInterfaceName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2021-08-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
-                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "subnet": {
-                                "id": "[variables('subnetRef')]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIpAddress": {
-                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]",
-                                "properties": {
-                                    "deleteOption": "[parameters('pipDeleteOption')]"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "enableAcceleratedNetworking": "[parameters('enableAcceleratedNetworking')]",
-                "networkSecurityGroup": {
-                    "id": "[variables('nsgId')]"
-                }
-            }
-        },
-        {
-            "name": "[parameters('networkSecurityGroupName')]",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-02-01",
-            "location": "[parameters('location')]",
-            "properties": {
-                "securityRules": "[parameters('networkSecurityGroupRules')]"
-            }
-        },
-        {
-            "name": "[parameters('publicIpAddressName')]",
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2020-08-01",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
-            },
-            "sku": {
-                "name": "[parameters('publicIpAddressSku')]"
-            }
-        },
-        {
-            "name": "[parameters('virtualMachineName')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2022-03-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
-            ],
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('virtualMachineSize')]"
-                },
-                "storageProfile": {
-                    "osDisk": {
-                        "createOption": "fromImage",
-                        "managedDisk": {
-                            "storageAccountType": "[parameters('osDiskType')]"
-                        },
-                        "deleteOption": "[parameters('osDiskDeleteOption')]"
-                    },
-                    "imageReference": {
-                        "publisher": "microsoftwindowsdesktop",
-                        "offer": "windows-11",
-                        "sku": "win11-21h2-pro",
-                        "version": "latest"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]",
-                            "properties": {
-                                "deleteOption": "[parameters('nicDeleteOption')]"
-                            }
-                        }
-                    ]
-                },
-                "osProfile": {
-                    "computerName": "[parameters('virtualMachineComputerName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "windowsConfiguration": {
-                        "enableAutomaticUpdates": true,
-                        "provisionVmAgent": true,
-                        "patchSettings": {
-                            "enableHotpatching": "[parameters('enableHotpatching')]",
-                            "patchMode": "[parameters('patchMode')]"
-                        }
-                    }
-                },
-                "licenseType": "Windows_Client",
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true
-                    }
-                }
-            }
-        }
-    ],
-    "outputs": {
-        "adminUsername": {
-            "type": "string",
-            "value": "[parameters('adminUsername')]"
-        }
-    }
-}
-```
-#### Variable
-```json
-{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": {
-            "value": "eastus"
-        },
-        "networkInterfaceName": {
-            "value": "testvmw11101"
-        },
-        "enableAcceleratedNetworking": {
-            "value": true
-        },
-        "networkSecurityGroupName": {
-            "value": "testvmw11-nsg"
-        },
-        "networkSecurityGroupRules": {
-            "value": [
-                {
-                    "name": "RDP",
-                    "properties": {
-                        "priority": 300,
-                        "protocol": "TCP",
-                        "access": "Allow",
-                        "direction": "Inbound",
-                        "sourceAddressPrefix": "*",
-                        "sourcePortRange": "*",
-                        "destinationAddressPrefix": "*",
-                        "destinationPortRange": "3389"
-                    }
-                }
-            ]
-        },
-        "subnetName": {
-            "value": "subnet-clients"
-        },
-        "virtualNetworkId": {
-            "value": "/subscriptions/3a970e11-b4aa-423d-91dc-18935c438bc4/resourceGroups/androcho-SIA-demo-001/providers/Microsoft.Network/virtualNetworks/vnet-spoke-client"
-        },
-        "publicIpAddressName": {
-            "value": "testvmw11-ip"
-        },
-        "publicIpAddressType": {
-            "value": "Static"
-        },
-        "publicIpAddressSku": {
-            "value": "Standard"
-        },
-        "pipDeleteOption": {
-            "value": "Detach"
-        },
-        "virtualMachineName": {
-            "value": "testvmw11"
-        },
-        "virtualMachineComputerName": {
-            "value": "testvmw11"
-        },
-        "virtualMachineRG": {
-            "value": "androcho-SIA-demo-001"
-        },
-        "osDiskType": {
-            "value": "Premium_LRS"
-        },
-        "osDiskDeleteOption": {
-            "value": "Delete"
-        },
-        "virtualMachineSize": {
-            "value": "Standard_D2s_v3"
-        },
-        "nicDeleteOption": {
-            "value": "Detach"
-        },
-        "adminUsername": {
-            "value": "akamai"
-        },
-        "adminPassword": {
-            "value": null
-        },
-        "patchMode": {
-            "value": "AutomaticByOS"
-        },
-        "enableHotpatching": {
-            "value": false
-        }
-    }
-}
-```
+## Demo from within the environment
+
+1. Connect to the Windows Client with your RDP client
+    - RDP machine: `<Firewall_Public_IP>:30001`
+    - Username: `akamai`
+    - Password: `<As defined in your $MYTFVAR>`
+2. Open Microsoft Edge
+3. TBD
