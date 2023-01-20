@@ -5,23 +5,33 @@ January 2023
 
 ## Table of contents<!-- omit in toc -->
 
-- [Must read before starting](#must-read-before-starting)
+- [Prerequisites](#prerequisites)
+- [Target architecture](#target-architecture)
 - [Deploying the demo](#deploying-the-demo)
 - [Appendixes](#appendixes)
   - [Windows 11 Pro gotcha](#windows-11-pro-gotcha)
     - [Template](#template)
     - [Variable](#variable)
 
-## Must read before starting
+## Prerequisites
 
-Read the general [Azure/Security Connector](../AZURE/README.md) instructions.
+- Microsoft [Azure Account](https://azure.microsoft.com)
+- Akamai SIA Enterprise account ([free trial]([#](https://www.akamai.com/products/secure-internet-access-enterprise)))
+- A computer with Azure CLI `az` and Terraform
+- A Remote Desktop Client
+
+## Target architecture
+
+TODO: Insert diagram here
 
 ## Deploying the demo
 
 ```bash
-# Customize to you own
+# Customize to you own Terraform variables
+# Use terraform-scripts/variables.tf as a template
 MYTFVAR="../variable-files/androcho-jan23-demo.tf"
 
+# Terraform standard commands
 terraform init
 terraform plan -var-file=$MYTFVAR
 terraform apply -var-file=$MYTFVAR
@@ -29,6 +39,7 @@ terraform apply -var-file=$MYTFVAR
 # And once the demo is over
 terraform destroy -var-file=$MYTFVAR
 ```
+
 ## Appendixes
 
 ### Windows 11 Pro gotcha

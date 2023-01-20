@@ -9,3 +9,9 @@ variable "resource_group" {
   type = string
   description = "Azure Resource group id"
 }
+
+variable "w11_client_ip" {
+  default = ""
+  type = string
+  description = "Windows 11 Client IP"
+}

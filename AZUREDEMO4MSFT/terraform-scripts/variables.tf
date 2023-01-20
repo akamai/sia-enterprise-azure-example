@@ -1,3 +1,6 @@
+# Template for the input variables of this project
+# Please override these variable in your own .tfvars file
+
 variable "region" {
   default = "eastus"
   type = string
@@ -9,3 +12,11 @@ variable "resource_group" {
   type = string
   description = "Azure Resource group id"
 }
+
+variable "w11_admin_password" {
+  default = ""
+  type = string
+  description = "Windows Client admin password"
+}
+
+

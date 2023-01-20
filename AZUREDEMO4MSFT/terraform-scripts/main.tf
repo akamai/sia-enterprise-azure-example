@@ -23,9 +23,19 @@ module "network" {
   source = "./modules/networking/"
   resource_group = var.resource_group
   region = var.region
+  w11_client_ip = module.client.w11-client-ip
+  
 }
 
 # TODO: We need a Windows Client here
+module "client" {
+  source = "./modules/client/"
+  resource_group = var.resource_group
+  region = var.region
+  subnet_id = module.network.subnet-clients-id
+  location = module.network.location
+  w11_admin_password = var.w11_admin_password
+}
 
 /* module "sc001" {
   source = "./modules/security_connector/"
