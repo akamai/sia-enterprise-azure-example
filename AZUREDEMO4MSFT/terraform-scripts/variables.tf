@@ -19,4 +19,14 @@ variable "w11_admin_password" {
   description = "Windows Client admin password"
 }
 
+variable "allow_list" {
+  default = []
+  type = list(string)
+  description = "List of IP addresses allowed to access your lab"
+}
 
+variable "sc-key" {
+  description = "Akamai Security Connector 'rsa public_key' to associate with the instance (default: None)"
+  default = ""
+  type = string
+}

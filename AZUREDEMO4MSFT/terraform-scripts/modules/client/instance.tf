@@ -1,4 +1,10 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine
+# For the Image SKU, please see:
+# https://learn.microsoft.com/en-us/azure/virtual-machines/windows/windows-desktop-multitenant-hosting-deployment
+# PowerShell:
+# Get-AzVmImageSku -Location 'West US' -PublisherName 'MicrosoftWindowsDesktop' -Offer 'Windows-11'
+# Azure CLI:
+# az vm image list --all --offer windows-11 --output table
 
 resource "azurerm_network_interface" "nic-client-windows11" {
   name                = "nic-client-windows11"
@@ -30,9 +36,9 @@ resource "azurerm_windows_virtual_machine" "client-windows11" {
   }
 
   source_image_reference {
-    publisher = "microsoftwindowsdesktop"
+    publisher = "MicrosoftWindowsDesktop"
     offer     = "windows-11"
-    sku       = "win11-21h2-pro"
+    sku       = "win11-22h2-pro"
     version   = "latest"
   }
 }

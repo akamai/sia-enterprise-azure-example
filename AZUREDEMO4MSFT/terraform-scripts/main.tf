@@ -5,7 +5,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version  = "~> 3.0.0"
+      version  = "~> 3.37.0"
     }
   }
 
@@ -19,15 +19,18 @@ terraform {
 
 #-------------------
 
+# Virtual Networks, Subnet, Route, Azure Firewall
 module "network" {
   source = "./modules/networking/"
   resource_group = var.resource_group
   region = var.region
   w11_client_ip = module.client.w11-client-ip
-  
+  sc-mgmt-ip = module.aksia.sc-mgmt-ip
+  sc-data-ip = module.aksia.sc-data-ip
+  allow_list = var.allow_list
 }
 
-# TODO: We need a Windows Client here
+# Windows Client
 module "client" {
   source = "./modules/client/"
   resource_group = var.resource_group
@@ -37,16 +40,16 @@ module "client" {
   w11_admin_password = var.w11_admin_password
 }
 
-/* module "sc001" {
-  source = "./modules/security_connector/"
-  sc-name = "SC-01"
+# Akamai Secure Internet Access Security Connector virtual appliance(s)
+module "aksia" {
+  source = "./modules/aksia/"
+  sc-name = "Ak-SIA-SC"
   region = var.region
   resource_group = var.resource_group
-  sc-key = var.ltc-key
-  sc-image-id = "/subscriptions/c3ab526d-d994-43c8-b0ab-c3eb185152d0/resourceGroups/sky-rg/providers/Microsoft.Compute/galleries/SkyImageGallery/images/sky-13965-20220919.44398044-debug-vhd/versions/0.0.1"
-  sc-ingress-subnet_id = module.network.ingress-net.id
-  sc-admin-subnet_id = module.network.admin-net.id
-} */
+  sc-key = var.sc-key
+  sc-subnet-data-id = module.network.subnet-aksc-data-id
+  sc-subnet-mgmt-id = module.network.subnet-aksc-mgmt-id
+}
 
 ##### OUTPUTS
 /* 

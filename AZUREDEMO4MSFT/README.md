@@ -1,15 +1,23 @@
-# Akamai SIA Cloud Security Connector<!-- omit in toc -->
+# Akamai SIA Cloud Security Connector with Azure Firewall<!-- omit in toc -->
 
-Demo prepared for Microsoft
-January 2023
+## About this document
+
+Last update: January 2023, 20th
+
+Authors:
+- Antoine Drochon (androcho@akamai.com)
+- Mike Schiessl (mschiessl@akamai.com)
 
 ## Table of contents<!-- omit in toc -->
 
+- [About this document](#about-this-document)
 - [Prerequisites](#prerequisites)
 - [Target architecture](#target-architecture)
-- [Deploying the demo](#deploying-the-demo)
+- [Deploying the Akamai Security Connector + Azure Firewall demo](#deploying-the-akamai-security-connector--azure-firewall-demo)
   - [Terraform for the heavy lifting](#terraform-for-the-heavy-lifting)
   - [Configure your SIA Enterprise Security Connector](#configure-your-sia-enterprise-security-connector)
+    - [Declare/Activate the Security Connector](#declareactivate-the-security-connector)
+    - [Create a Location, Policy](#create-a-location-policy)
 - [Demo from within the environment](#demo-from-within-the-environment)
 
 ## Prerequisites
@@ -23,7 +31,7 @@ January 2023
 
 TODO: Insert diagram here
 
-## Deploying the demo
+## Deploying the Akamai Security Connector + Azure Firewall demo
 
 ### Terraform for the heavy lifting
 
@@ -51,13 +59,17 @@ terraform destroy -var-file=$MYTFVAR
 
 TODO: write instructions, outline being:
 
-- Declare/Activate the Security Connector
-- Create a Location, Policy
+#### Declare/Activate the Security Connector
+
+- Get the Security Connector Activation Code from Akamai Control Center / API
+- SSH to `<AZFirewall_Public_IP>:30002`
+
+#### Create a Location, Policy
 
 ## Demo from within the environment
 
 1. Connect to the Windows Client with your RDP client
-    - RDP machine: `<Firewall_Public_IP>:30001`
+    - RDP machine: `<AZFirewall_Public_IP>:30001`
     - Username: `akamai`
     - Password: `<As defined in your $MYTFVAR>`
 2. Open Microsoft Edge
