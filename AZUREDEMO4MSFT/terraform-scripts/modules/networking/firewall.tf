@@ -199,5 +199,28 @@ resource "azurerm_firewall_nat_rule_collection" "nat_rdp" {
       "TCP",
     ]
   } 
+
+rule {
+    name = "sc-ssh-bis"
+
+    source_addresses = var.allow_list
+
+    destination_ports = [
+      "30003",
+    ]
+
+    destination_addresses = [
+      azurerm_public_ip.ip-azfirewall.ip_address,
+    ]
+
+    translated_port = 22
+
+    translated_address = var.sc-
+
+    protocols = [
+      "TCP",
+    ]
+  } 
+
 }
 
