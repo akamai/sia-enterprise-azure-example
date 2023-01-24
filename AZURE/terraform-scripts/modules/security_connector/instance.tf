@@ -3,14 +3,14 @@ resource azurerm_linux_virtual_machine "security-connector" {
   resource_group_name = var.resource_group
   location            = var.region
   size                = "Standard_B2s"
-  admin_username      = "sc-admin"
+  admin_username      = "admin"
   network_interface_ids = [
     azurerm_network_interface.sc-if0.id,
     azurerm_network_interface.sc-if1.id
   ]
 
   admin_ssh_key {
-    username   = "sc-admin"
+    username   = "admin"
     public_key = var.sc-key
   }
 

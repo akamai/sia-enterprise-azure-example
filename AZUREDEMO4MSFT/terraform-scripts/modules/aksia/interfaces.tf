@@ -16,7 +16,7 @@ resource "azurerm_network_interface" "sc-netif-data" {
   location            = var.region
   resource_group_name = var.resource_group
   ip_configuration {
-    name                          = "sc-ip-mgmt"
+    name                          = "sc-ip-data"
     subnet_id                     = var.sc-subnet-data-id
     private_ip_address_allocation = "Dynamic"
   }

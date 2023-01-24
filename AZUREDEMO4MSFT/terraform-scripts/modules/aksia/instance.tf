@@ -1,44 +1,18 @@
 # AK SIA Beta is using Azure Community aka Gallery
-# https://stackoverflow.com/questions/68581841/terraform-azure-virtual-machine-from-shared-image-gallery
-
-/* resource "azurerm_virtual_machine" "testingvm" {
-  name                        = "${var.sc-name}-instance"
-  resource_group_name         = var.resource_group
-  location                    = var.region
-
-  vm_size                     = "Standard_B2s"
-  network_interface_ids = [
-    azurerm_network_interface.sc-netif-data.id,
-    azurerm_network_interface.sc-netif-mgmt.id
-  ]
-
-  storage_image_reference {
-    id = "/CommunityGalleries/AkamaiSC-25e2ec5b-5d88-4af3-8118-ade3f4ba7ea0/Images/sky-13965-20221110.45138874-deploy-vhd"
-  }
-
-  storage_os_disk {
-    name                      = "aksiasc-os"
-    caching                   = "ReadWrite"
-    create_option             = "FromImage"
-    managed_disk_type         = "Premium_LRS"
-  }
-} */
 
 resource azurerm_linux_virtual_machine "aksc-instance" {
-
-  count = 1 # until we fix the image authorization
 
   name                = "${var.sc-name}-instance"
   resource_group_name = var.resource_group
   location            = var.region
   size                = "Standard_B2s"
   admin_username      = "sc-admin"
-  # Akamai Security Connector Appliance expect
+  # Akamai Security Connector Appliance expect (TBC)
   # - first: the data (ingress) NIC
   # - second: the mgmt (+ egress) NIC
   network_interface_ids = [
-    azurerm_network_interface.sc-netif-data.id,
-    azurerm_network_interface.sc-netif-mgmt.id
+    azurerm_network_interface.sc-netif-mgmt.id,
+    azurerm_network_interface.sc-netif-data.id
   ]
 
   admin_ssh_key {

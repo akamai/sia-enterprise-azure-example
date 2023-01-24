@@ -2,7 +2,9 @@
 
 ## About this document
 
-Last update: January 2023, 20th
+This document walk through the build of a lab showing how you can protect your workload running in Azure with Akamai Secure Internet Access. Through a tight integration with Azure Firewall, you will be able to block threat directly at the DNS level.
+
+Last update: January 2023, 23th
 
 Authors:
 - Antoine Drochon (androcho@akamai.com)
@@ -35,7 +37,8 @@ TODO: Insert diagram here
 
 ### Terraform for the heavy lifting
 
-It takes between 5 and 10 minutes to fully populate a Resource Group
+It takes between 5 and 10 minutes to fully populate a Resource Group.
+See https://techdocs.akamai.com/etp/docs/deploy-security-connector#deploy-security-connector-on-microsoft-azure for the step by step process if you decide to go manually.
 
 ```bash
 # Customize to your own Terraform variables

@@ -22,6 +22,84 @@ resource "azurerm_firewall" "main-azfirewall" {
   }
 }
 
+# Network Rules (Classic)
+resource "azurerm_firewall_network_rule_collection" "nr_web_from_client" {
+  name                = "fw_nr_collection"
+  azure_firewall_name = azurerm_firewall.main-azfirewall.name
+  resource_group_name = var.resource_group
+  priority            = 200
+  action              = "Allow"
+
+  rule {
+    name = "allow-web-browsing"
+    source_addresses = azurerm_virtual_network.vnet-spoke-client.address_space
+    destination_ports = ["80", "443"]
+    destination_addresses = ["*",]
+    protocols = ["TCP",]
+  }
+
+  rule {
+    name = "allow-external-dns-troubleshooting"
+    source_addresses = azurerm_virtual_network.vnet-spoke-client.address_space
+    destination_ports = ["53"]
+    destination_addresses = ["*",]
+    protocols = ["TCP", "UDP"]
+  }
+
+  rule {
+    # Strictly speaking only TCP/443 and UDP/123 should be required
+    name = "allow-aksec-outbound"
+
+    source_addresses = azurerm_virtual_network.vnet-spoke-aksc.address_space
+
+    destination_ports = [ "*", ]
+
+    destination_addresses = [
+      "*",
+    ]
+
+    protocols = [
+      "TCP", "UDP", "ICMP"
+    ]
+  }
+}
+
+# NAT rules (Classic)
+
+resource "azurerm_firewall_nat_rule_collection" "nat_rules" {
+  name                = "fw_nat_collection"
+  azure_firewall_name = azurerm_firewall.main-azfirewall.name
+  resource_group_name = var.resource_group
+  priority            = 100
+  action              = "Dnat"
+
+  rule {
+    name = "rdp-remote-access"
+    source_addresses = var.allow_list
+    destination_ports = ["30001",]
+    destination_addresses = [
+      azurerm_public_ip.ip-azfirewall.ip_address,
+    ]
+    translated_port = 3389
+    translated_address = var.w11_client_ip
+    protocols = ["TCP",]
+  }
+
+  rule {
+    name = "sc-ssh"
+    source_addresses = var.allow_list
+    destination_ports = ["30002",]
+    destination_addresses = [
+      azurerm_public_ip.ip-azfirewall.ip_address,
+    ]
+    translated_port = 22
+    translated_address = var.sc-mgmt-ip
+    protocols = ["TCP",]
+  }
+
+}
+
+
 # Rule Policy and Collections
   /*
 resource "azurerm_firewall_policy" "fw-policy" {
@@ -97,130 +175,3 @@ resource "azurerm_firewall_policy_rule_collection_group" "fw-rule-collection" {
 
    
 } */
-
-# Network Rules (Classic)
-resource "azurerm_firewall_network_rule_collection" "nr_web_from_client" {
-  name                = "fw_nr_collection"
-  azure_firewall_name = azurerm_firewall.main-azfirewall.name
-  resource_group_name = var.resource_group
-  priority            = 200
-  action              = "Allow"
-
-  rule {
-    name = "allow-web-browsing"
-
-    source_addresses = [
-      "10.3.0.0/16", # TODO: pick the vnet-clients ipcidr
-    ]
-
-    destination_ports = [
-      "80", "443"
-    ]
-
-    destination_addresses = [
-      "*",
-    ]
-
-    protocols = [
-      "TCP",
-    ]
-  }
-
-  rule {
-    name = "allow-aksec-outbound"
-
-    source_addresses = [
-      "10.2.0.0/16", # TODO: pick the vnet-aksc cidr
-    ]
-
-    destination_ports = [ "*", ]
-
-    destination_addresses = [
-      "*",
-    ]
-
-    protocols = [
-      "TCP", "UDP"
-    ]
-  }
-
-
-}
-
-# NAT rules (Classic)
-
-resource "azurerm_firewall_nat_rule_collection" "nat_rdp" {
-  name                = "fw_nat_collection"
-  azure_firewall_name = azurerm_firewall.main-azfirewall.name
-  resource_group_name = var.resource_group
-  priority            = 100
-  action              = "Dnat"
-
-  rule {
-    name = "w11-rdp"
-
-    source_addresses = var.allow_list
-
-    destination_ports = [
-      "30001",
-    ]
-
-    destination_addresses = [
-      azurerm_public_ip.ip-azfirewall.ip_address,
-    ]
-
-    translated_port = 3389
-
-    translated_address = var.w11_client_ip
-
-    protocols = [
-      "TCP",
-    ]
-  }
-
-  rule {
-    name = "sc-ssh"
-
-    source_addresses = var.allow_list
-
-    destination_ports = [
-      "30002",
-    ]
-
-    destination_addresses = [
-      azurerm_public_ip.ip-azfirewall.ip_address,
-    ]
-
-    translated_port = 22
-
-    translated_address = var.sc-mgmt-ip
-
-    protocols = [
-      "TCP",
-    ]
-  } 
-
-rule {
-    name = "sc-ssh-bis"
-
-    source_addresses = var.allow_list
-
-    destination_ports = [
-      "30003",
-    ]
-
-    destination_addresses = [
-      azurerm_public_ip.ip-azfirewall.ip_address,
-    ]
-
-    translated_port = 22
-
-    translated_address = var.sc-
-
-    protocols = [
-      "TCP",
-    ]
-  } 
-
-}
-
