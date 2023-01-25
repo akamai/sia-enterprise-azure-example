@@ -20,8 +20,12 @@ variable "sc-image-id" {
   default = ""
 }
 
-variable "sc-subnet-id" {
-  description = "The subnet to put the network interface into (default: None)"
+variable "sc-subnet-data-id" {
+  description = "The subnet to put the data interface into (default: None)"
+}
+
+variable "sc-subnet-mgmt-id" {
+  description = "The subnet to put the admin/egress interface into (default: None)"
 }
 
 variable "sc-key" {

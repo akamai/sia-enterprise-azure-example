@@ -25,7 +25,8 @@ module "network" {
   resource_group = var.resource_group
   region = var.region
   w11_client_ip = module.client.w11-client-ip
-  sc-ip = module.aksia.sc-ip
+  sc-mgmt-ip = module.aksia.sc-mgmt-ip
+  sc-data-ip = module.aksia.sc-data-ip
   allow_list = var.allow_list
 }
 
@@ -46,7 +47,8 @@ module "aksia" {
   region = var.region
   resource_group = var.resource_group
   sc-key = var.sc-key
-  sc-subnet-id = module.network.subnet-aksc-id
+  sc-subnet-data-id = module.network.subnet-aksc-data-id
+  sc-subnet-mgmt-id = module.network.subnet-aksc-mgmt-id
 }
 
 ##### OUTPUTS

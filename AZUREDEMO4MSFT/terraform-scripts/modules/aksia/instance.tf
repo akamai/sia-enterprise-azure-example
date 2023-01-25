@@ -6,13 +6,17 @@ resource azurerm_linux_virtual_machine "aksc-instance" {
   resource_group_name = var.resource_group
   location            = var.region
   size                = "Standard_B2s"
-  admin_username      = "admin"
+  admin_username      = "sc-admin"
+  # Akamai Security Connector Appliance expect (TBC)
+  # - first: the data (ingress) NIC
+  # - second: the mgmt (+ egress) NIC
   network_interface_ids = [
-    azurerm_network_interface.sc-netif.id,
+    azurerm_network_interface.sc-netif-mgmt.id,
+    azurerm_network_interface.sc-netif-data.id
   ]
 
   admin_ssh_key {
-    username   = "admin"
+    username   = "sc-admin"
     public_key = var.sc-key
   }
 

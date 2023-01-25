@@ -93,7 +93,7 @@ resource "azurerm_firewall_nat_rule_collection" "nat_rules" {
       azurerm_public_ip.ip-azfirewall.ip_address,
     ]
     translated_port = 22
-    translated_address = var.sc-ip
+    translated_address = var.sc-mgmt-ip
     protocols = ["TCP",]
   }
 
