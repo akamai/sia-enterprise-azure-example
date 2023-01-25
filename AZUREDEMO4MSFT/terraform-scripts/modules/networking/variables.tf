@@ -16,17 +16,12 @@ variable "w11_client_ip" {
   description = "Windows 11 Client IP"
 }
 
-variable "sc-mgmt-ip" {
+variable "sc-ip" {
   default = ""
   type = string
-  description = "Akamai Security Connector Management Private IP"
+  description = "Akamai Security Connector IP"
 }
 
-variable "sc-data-ip" {
-  default = ""
-  type = string
-  description = "Akamai Security Connector Data IP"
-}
 variable "allow_list" {
   default = []
   type = list(string)

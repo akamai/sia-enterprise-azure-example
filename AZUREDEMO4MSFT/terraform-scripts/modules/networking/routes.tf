@@ -21,12 +21,7 @@ resource "azurerm_subnet_route_table_association" "route_assoc_client" {
   route_table_id = azurerm_route_table.rt_azfirewall.id
 }
 
-resource "azurerm_subnet_route_table_association" "route_assoc_aksc_data" {
-  subnet_id      = azurerm_subnet.subnet-aksc-data.id
-  route_table_id = azurerm_route_table.rt_azfirewall.id
-}
-
-resource "azurerm_subnet_route_table_association" "route_assoc_aksc_mgmt" {
-  subnet_id      = azurerm_subnet.subnet-aksc-mgmt.id
+resource "azurerm_subnet_route_table_association" "route_assoc_aksc" {
+  subnet_id      = azurerm_subnet.subnet-aksc.id
   route_table_id = azurerm_route_table.rt_azfirewall.id
 }
