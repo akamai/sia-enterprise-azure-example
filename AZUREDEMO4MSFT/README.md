@@ -19,7 +19,8 @@ Authors:
   - [Terraform for the heavy lifting](#terraform-for-the-heavy-lifting)
   - [Configure your SIA Enterprise Security Connector](#configure-your-sia-enterprise-security-connector)
     - [Declare/Activate the Security Connector](#declareactivate-the-security-connector)
-    - [Create a Location, Policy](#create-a-location-policy)
+    - [Create a SIA Location and Policy](#create-a-sia-location-and-policy)
+  - [Test!](#test)
 - [Demo from within the environment](#demo-from-within-the-environment)
 
 ## Prerequisites
@@ -65,9 +66,29 @@ TODO: write instructions, outline being:
 #### Declare/Activate the Security Connector
 
 - Get the Security Connector Activation Code from Akamai Control Center / API
-- SSH to `<AZFirewall_Public_IP>:30002`
+- SSH to Security Connector Console
+  - Use `<AZFirewall_Public_IP>:30002` if remote
+  - or from the Windows machine within the lab `<Security Connector Mgmt IP>:22`
+  - Follow instruction on screen to activate
 
-#### Create a Location, Policy
+#### Create a SIA Location and Policy
+
+### Test!
+
+On the Windows machine, open a CMD Shell:
+
+```cmd
+C:\Users\akamai> nslookup
+> www.akamai.com <Security Connector Data IP>
+``` 
+It should return the nearest Akamai Server
+
+Now let's try with a bad domain. More test URLs at  
+https://techdocs.akamai.com/etp/docs/test-security-connector
+
+```cmd
+> www.akamaietpphishingtest.com
+```
 
 ## Demo from within the environment
 
@@ -76,4 +97,7 @@ TODO: write instructions, outline being:
     - Username: `akamai`
     - Password: `<As defined in your $MYTFVAR>`
 2. Open Microsoft Edge
-3. TBD
+  - Open the following URLs:
+    - http://url1
+    - http://url2
+    - http://url3
