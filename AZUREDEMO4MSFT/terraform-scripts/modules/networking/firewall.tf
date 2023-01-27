@@ -38,13 +38,14 @@ resource "azurerm_firewall_network_rule_collection" "nr_web_from_client" {
     protocols = ["TCP",]
   }
 
-  rule {
+  # Uncomment only if you want to test 3rd party DNS provider publicly available
+/*   rule {
     name = "allow-external-dns-troubleshooting"
     source_addresses = azurerm_virtual_network.vnet-spoke-client.address_space
     destination_ports = ["53"]
     destination_addresses = ["*",]
     protocols = ["TCP", "UDP"]
-  }
+  } */
 
   rule {
     # Strictly speaking only TCP/443 and UDP/123 should be required

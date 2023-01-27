@@ -19,8 +19,13 @@ Authors:
   - [Terraform for the heavy lifting](#terraform-for-the-heavy-lifting)
   - [Configure your SIA Enterprise Security Connector](#configure-your-sia-enterprise-security-connector)
     - [Declare/Activate the Security Connector](#declareactivate-the-security-connector)
-    - [Create a Location, Policy](#create-a-location-policy)
+    - [Create a SIA Location and Policy](#create-a-sia-location-and-policy)
+  - [Test!](#test)
 - [Demo from within the environment](#demo-from-within-the-environment)
+
+## ⚠️ WORK IN PROGRESS ⚠️
+
+- DHCP on vnet-spoke-client should use SC data IP address
 
 ## Prerequisites
 
@@ -60,14 +65,43 @@ terraform destroy -var-file=$MYTFVAR
 
 ### Configure your SIA Enterprise Security Connector
 
-TODO: write instructions, outline being:
+#### Register the Security Connector
 
-#### Declare/Activate the Security Connector
+- Follow [Add Security Connector instructions](https://techdocs.akamai.com/etp/docs/add-security-connector)
+- Write down the [Activation Code](https://techdocs.akamai.com/etp/docs/generate-activation-code1)
+- SSH to Security Connector Console
+  - Use `<AZFirewall_Public_IP>:30002` if remote
+  - or from the Windows machine within the lab `<Security Connector Mgmt IP>:22`
+  - Follow instructions on screen to activate
+- By default the Gateway IP will be correct on the `en2` network interface, but missing on the `en1` network interface. Set en1 to Static instead of DHCP, same IP (typically `10.2.2.4`), mask (`255.255.255.0`) and set the gateway to `10.2.2.1`
 
-- Get the Security Connector Activation Code from Akamai Control Center / API
-- SSH to `<AZFirewall_Public_IP>:30002`
+#### Create a SIA Location and Policy
 
-#### Create a Location, Policy
+- Open Akamai Control Center https://control.akamai.com
+- Navigate to Enterprise Center
+- Open Threat Protector > Policy
+- Add a new policy in `DNS-only` mode
+- Save the policy with your prefered name
+- Open Threat Protector > Locations
+- Add a new location with the public IP address of the Azure Firewall
+- Set the policy to the one your previously created
+
+### Test!
+
+On the Windows machine, open a CMD Shell:
+
+```cmd
+C:\Users\akamai> nslookup
+> www.akamai.com <Security Connector Data IP>
+``` 
+It should return the nearest Akamai Server
+
+Now let's try with a bad domain. More test URLs at  
+https://techdocs.akamai.com/etp/docs/test-security-connector
+
+```cmd
+> akamaietpphishingtest.com
+```
 
 ## Demo from within the environment
 
@@ -76,4 +110,24 @@ TODO: write instructions, outline being:
     - Username: `akamai`
     - Password: `<As defined in your $MYTFVAR>`
 2. Open Microsoft Edge
-3. TBD
+  - Open the following URLs:
+    - http://akamaietpphishingtest.com
+    - http://akamaietpcnctest.com
+    - http://akamaietpmalwaretest.com
+
+# Limitations / known issues
+
+## Azure Firewall slow to create
+
+**Problem**: The creation of the Azure Firewall takes a few minutes, we observed around 6 minutes  
+**Solution**: it should not time out, be patient
+
+## Security Connector failure to provision
+
+**Problem**:
+```
+│ Error: waiting for creation of Linux Virtual Machine: (Name "Ak-SIA-SC-instance" / Resource Group "your-resource-group"): Code="OSProvisioningTimedOut" Message="OS Provisioning for VM 'Ak-SIA-SC-instance' did not finish in the allotted time. The VM may still finish provisioning successfully. Please check provisioning state later. Also, make sure the image has been properly prepared (generalized).\r\n * Instructions for Windows: https://azure.microsoft.com/documentation/articles/virtual-machines-windows-upload-image/ \r\n * Instructions for Linux: https://azure.microsoft.com/documentation/articles/virtual-machines-linux-capture-image/ \r\n * If you are deploying more than 20 Virtual Machines concurrently, consider moving your custom image to shared image gallery. Please refer to https://aka.ms/movetosig for the same."
+```
+
+**Solution**:
+Replace "Standard_B2s" by "Standard_F2s_v2" in `terraform-scripts/modules/aksia/instance.tf`
