@@ -20,6 +20,7 @@ resource "azurerm_virtual_network" "vnet-spoke-client" {
   resource_group_name = var.resource_group
   location            = var.region
   address_space       = ["10.3.0.0/16"]
+   dns_servers         = [var.sc-data-ip, ]
 }
 
 # Peerings between Virtual Networks

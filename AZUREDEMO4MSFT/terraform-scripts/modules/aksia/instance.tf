@@ -5,13 +5,18 @@ resource azurerm_linux_virtual_machine "aksc-instance" {
   name                = "${var.sc-name}-instance"
   resource_group_name = var.resource_group
   location            = var.region
-  size                = "Standard_B2s"
+  size                = "Standard_F2s_v2" # Originally "Standard_B2s" causing OSProvisioningTimedOut
+  # Akamai image comes with built-in admin
+  # we set a different user name to satisfy Terraform Provider
+  # where admin_username is required.
   admin_username      = "sc-admin"
-  # Akamai Security Connector Appliance expect (TBC)
-  # - first: the data (ingress) NIC
-  # - second: the mgmt (+ egress) NIC
+  # Akamai Security Connector Appliance expect:
+  # - first: the mgmt (+ egress) NIC
+  # - second: the data (ingress) NIC
   network_interface_ids = [
+    # en2 - https://techdocs.akamai.com/etp/docs/configure-en2-interface
     azurerm_network_interface.sc-netif-mgmt.id,
+    # en1 - https://techdocs.akamai.com/etp/docs/configure-en1-interface
     azurerm_network_interface.sc-netif-data.id
   ]
 
