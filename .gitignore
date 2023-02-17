@@ -30,3 +30,5 @@ aws-user.md
 .idea
 **/.idea
 /venv/
+
+variables-files/androcho*
