@@ -30,3 +30,9 @@ variable "sc-key" {
   default = ""
   type = string
 }
+
+variable "azure_firewall_rule_mode" {
+  description = "How should we provision the Azure Firewall rules? Possible values `classic` or `policy`"
+  default = ""
+  type = string
+}

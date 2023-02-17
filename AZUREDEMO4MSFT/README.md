@@ -2,9 +2,11 @@
 
 ## About this document
 
-This document walk through the build of a lab showing how you can protect your workload running in Azure with Akamai Secure Internet Access. Through a tight integration with Azure Firewall, you will be able to block threat directly at the DNS level.
+This document walk through the build of a lab showing how you can protect your workload in Azure from DNS threats with Akamai Secure Internet Access. 
 
-Last update: January 2023, 23th
+Through a tight integration with Azure Firewall, you will be able to block threat directly at the DNS level.
+
+Last update: January 2023, 27th
 
 Authors:
 - Antoine Drochon (androcho@akamai.com)
@@ -23,20 +25,16 @@ Authors:
   - [Test!](#test)
 - [Demo from within the environment](#demo-from-within-the-environment)
 
-## ⚠️ WORK IN PROGRESS ⚠️
-
-- DHCP on vnet-spoke-client should use SC data IP address
-
 ## Prerequisites
 
 - Microsoft [Azure Account](https://azure.microsoft.com) with an empty Resource Group
-- Akamai SIA Enterprise account ([free trial]([#](https://www.akamai.com/products/secure-internet-access-enterprise)))
+- Akamai SIA Enterprise (formerly ETP) account ([free trial]([#](https://www.akamai.com/products/secure-internet-access-enterprise)))
 - A computer with Azure CLI `az` and Terraform
 - A Remote Desktop Client
 
 ## Target architecture
 
-TODO: Insert diagram here
+![Overview diagram of the setup](doc/overview.png)
 
 ## Deploying the Akamai Security Connector + Azure Firewall demo
 
@@ -47,7 +45,7 @@ See https://techdocs.akamai.com/etp/docs/deploy-security-connector#deploy-securi
 
 ```bash
 # Customize to your own Terraform variables
-# Use terraform-scripts/variables.tf as a template
+# Use variable-files/example-variables.tf as a template
 MYTFVAR="../variable-files/androcho-jan23-demo.tf"
 
 # Terraform standard commands
@@ -73,16 +71,19 @@ terraform destroy -var-file=$MYTFVAR
   - Use `<AZFirewall_Public_IP>:30002` if remote
   - or from the Windows machine within the lab `<Security Connector Mgmt IP>:22`
   - Follow instructions on screen to activate
-- By default the Gateway IP will be correct on the `en2` network interface, but missing on the `en1` network interface. Set en1 to Static instead of DHCP, same IP (typically `10.2.2.4`), mask (`255.255.255.0`) and set the gateway to `10.2.2.1`
+- By default the Gateway IP will be correct on the `en2` network interface, but missing on the `en1` network interface. Set en1 to Static instead of DHCP, IP should be `10.2.2.100`, mask (`255.255.255.0`) and set the gateway to `10.2.2.1`
+
+Once the setup complete, you should see something like the screenshot below:
+![Security Connector Console over SSH](doc/akamai-sia-securityconnector-console.png)
 
 #### Create a SIA Location and Policy
 
 - Open Akamai Control Center https://control.akamai.com
-- Navigate to Enterprise Center
-- Open Threat Protector > Policy
+- Navigate to **Enterprise Center**
+- On the left menu open **Threat Protector** > **Policy**
 - Add a new policy in `DNS-only` mode
 - Save the policy with your prefered name
-- Open Threat Protector > Locations
+- On the left menu choose **Threat Protector** > **Locations**
 - Add a new location with the public IP address of the Azure Firewall
 - Set the policy to the one your previously created
 
@@ -130,4 +131,5 @@ https://techdocs.akamai.com/etp/docs/test-security-connector
 ```
 
 **Solution**:
-Replace "Standard_B2s" by "Standard_F2s_v2" in `terraform-scripts/modules/aksia/instance.tf`
+- Replace "Standard_B2s" by "Standard_F2s_v2" in `terraform-scripts/modules/aksia/instance.tf`.
+- If that's possible, try a different Azure location

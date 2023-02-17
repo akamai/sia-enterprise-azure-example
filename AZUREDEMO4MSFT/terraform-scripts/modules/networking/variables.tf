@@ -32,3 +32,9 @@ variable "allow_list" {
   type = list(string)
   description = "List of IP addresses allowed to access your lab"
 }
+
+variable "azure_firewall_rule_mode" {
+  default = "classic"
+  type = string
+  description = "Firewall policy can be deployed as 'classic' or 'policy' (Firewall Manager)"
+}
