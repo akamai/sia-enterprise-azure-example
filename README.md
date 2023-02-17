@@ -2,11 +2,11 @@
 
 ## About this document
 
-This document walk through the build of a lab showing how you can protect your workload in Azure from DNS threats with Akamai Secure Internet Access. 
+This document walk through the build of a lab showing how you can protect your workload in Azure from DNS threats with Akamai Secure Internet Access (SIA). 
 
 Through a tight integration with Azure Firewall, you will be able to block threat directly at the DNS level.
 
-Last update: January 2023, 27th
+Last update: February 2023
 
 Authors:
 - Antoine Drochon (androcho@akamai.com)
@@ -34,7 +34,13 @@ Authors:
 
 ## Target architecture
 
-![Overview diagram of the setup](doc/overview.png)
+### Option 1: Threat Protection for Azure Virtual Network
+
+![Overview diagram of the setup](doc/akamai-sia-azure-arch-dns-vnet.png)
+
+### Option 2: Threat Protection through Azure Firewall
+
+![Overview diagram of the setup](doc/akamai-sia-azure-arch-dns-proxy.png)
 
 ## Deploying the Akamai Security Connector + Azure Firewall demo
 
